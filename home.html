@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Groupie Tracker</h1>
+    <script>
+        // Create a new groupie
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/data', true);
+        xhr.onload = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.response)
+                // console.log(data);
+                
+                data.forEach(item => {
+                    console.log(item)
+                    var div = document.createElement('div');
+                    div.innerHTML = `<h1>${item.id}</h1>
+                    <h1>${item.name}</h1>
+                    <img class="images" id="${item.id}" src="${item.image}" alt="${item.name}"</img>
+                    `
+                    document.body.appendChild(div);
+                    
+                });
+                let images = document.querySelectorAll('.images')
+                images.forEach(image => {
+                    image.addEventListener('click', (ev) => {
+                        ev.preventDefault()
+                        console.log(image)
+                        let id = image.id
+                        
+                        console.log(data[(id)-1])
+                        window.location.href = `data.html?id=${image.id}`
+                    })
+                })
+            }
+        }
+        xhr.send()
+        
+    </script>
+</body>
+</html>

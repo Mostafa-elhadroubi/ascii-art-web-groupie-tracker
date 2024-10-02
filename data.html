@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Page</title>
+</head>
+<body>
+    <h1>Data Details</h1>
+    <script>
+        // Function to get a query parameter from the URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        let id = getQueryParam('id');  // Get the 'id' parameter from the URL
+
+        if (id) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', `/ad?id=${id}`, true);  // Send a GET request to the server
+            xhr.onload = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    let data = JSON.parse(xhr.responseText);  // Parse the JSON response
+                    console.log(data);  // Log the specific data to the console
+                    let div = document.createElement('div')
+                    div.innerHTML = `
+                    <h1>ID: ${data.id}</h1>
+                    <h1>Name: ${data.name}</h1>
+                    <img src="${data.image}" alt="${data.name}">
+                    <p>Locations: <a href="${data.locations}">${data.locations}</a></p>
+                    <h2>First Album: ${data.firstAlbum}</h2>
+                    <p>Creation Date: ${data.creationDate}</p>
+                    <p>Relations: <a href="${data.relations}">${data.relations}</a></p>
+                    <p>Concert Dates: <a href="${data.concertDates}">${data.concertDates}</a></p>
+                    <ol>
+                    `
+                    document.body.appendChild(div)
+                    let ol = document.createElement("ol")
+
+                    data.members.forEach(item => {
+                        ol.innerHTML += `<li>${item}</li>`
+                    });
+                    div.appendChild(ol)
+                    // div.innerHTML = `</ol>`
+                    // document.body.appendChild(div)
+                } else {
+                    console.error('Failed to fetch data:', xhr.statusText);  // Handle errors
+                }
+            };
+            xhr.send();  // Send the request
+        } else {
+            console.error('No ID provided in the URL');  // Handle case where no ID is found
+        }
+    </script>
+</body>
+</html>
